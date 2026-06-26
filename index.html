@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PKG 部門假期與出差總覽</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --surface-0: #f5f5f3;
+    --surface-1: #efefec;
+    --surface-2: #ffffff;
+    --text-primary: #1a1a18;
+    --text-secondary: #5a5a56;
+    --text-muted: #8a8a84;
+    --border: rgba(0,0,0,0.1);
+    --border-strong: rgba(0,0,0,0.18);
+    --bg-accent: #e6f1fb;
+    --fill-accent: #378ADD;
+    --text-accent: #185FA5;
+    --border-accent: #85B7EB;
+    --bg-danger: #fcebeb;
+    --text-danger: #A32D2D;
+    --border-danger: #F09595;
+    --radius: 8px;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --surface-0: #1e1e1c;
+      --surface-1: #272724;
+      --surface-2: #323230;
+      --text-primary: #e8e8e2;
+      --text-secondary: #a8a8a0;
+      --text-muted: #6a6a64;
+      --border: rgba(255,255,255,0.1);
+      --border-strong: rgba(255,255,255,0.18);
+      --bg-accent: #0c2a40;
+      --fill-accent: #378ADD;
+      --text-accent: #85B7EB;
+      --border-accent: #185FA5;
+      --bg-danger: #2a1010;
+      --text-danger: #F09595;
+      --border-danger: #A32D2D;
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--surface-0);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .page-header h1 {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-primary);
+    flex: 1;
+  }
+
+  .page-header .subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .month-nav { display: flex; align-items: center; gap: 6px; }
+
+  .month-nav button {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; padding: 0;
+    background: var(--surface-2);
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: background 0.1s;
+  }
+  .month-nav button:hover { background: var(--surface-1); }
+
+  .month-label {
+    font-size: 15px; font-weight: 500;
+    color: var(--text-primary);
+    min-width: 90px; text-align: center;
+  }
+
+  .btn {
+    font-size: 12px; padding: 6px 14px;
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--surface-2);
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: background 0.1s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--surface-1); }
+  .btn.primary { background: var(--fill-accent); color: #fff; border-color: var(--fill-accent); }
+  .btn.primary:hover { opacity: 0.9; }
+  .btn.danger { color: var(--text-danger); border-color: var(--border-danger); }
+  .btn.danger:hover { background: var(--bg-danger); }
+
+  .filter-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 12px;
+    background: var(--surface-1);
+    border-radius: 10px;
+    border: 0.5px solid var(--border);
+  }
+
+  .group-label {
+    font-size: 10px; font-weight: 500;
+    margin-bottom: 6px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .group-label button {
+    font-size: 10px; padding: 1px 7px;
+    border-radius: 4px;
+    background: var(--surface-2);
+    border: 0.5px solid var(--border);
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .group-label button:hover { background: var(--surface-0); }
+
+  .member-chips { display: flex; flex-wrap: wrap; gap: 3px; }
+
+  .chip {
+    font-size: 11px; padding: 2px 9px;
+    border-radius: 99px; cursor: pointer;
+    border: 0.5px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-secondary);
+    transition: background 0.1s, color 0.1s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .chip.active { color: #fff; }
+  .chip.g0.active { background: #378ADD; border-color: #378ADD; }
+  .chip.g1.active { background: #1D9E75; border-color: #1D9E75; }
+  .chip.g2.active { background: #D85A30; border-color: #D85A30; }
+  .chip.g3.active { background: #534AB7; border-color: #534AB7; }
+
+  .calendar-wrap { overflow-x: auto; border-radius: 10px; border: 0.5px solid var(--border); }
+
+  .calendar {
+    width: 100%; border-collapse: collapse;
+    font-size: 12px; min-width: 620px;
+    background: var(--surface-2);
+  }
+
+  .calendar thead th {
+    text-align: center; padding: 4px 1px;
+    font-weight: 500; font-size: 10px;
+    color: var(--text-muted);
+    border-bottom: 0.5px solid var(--border);
+    background: var(--surface-1);
+    position: sticky; top: 0; z-index: 2;
+  }
+
+  .calendar thead th.name-col {
+    text-align: left; padding-left: 10px;
+    min-width: 120px; width: 130px;
+    font-size: 11px;
+    position: sticky; top: 0; left: 0; z-index: 3;
+  }
+
+  .calendar thead th.day-col { min-width: 22px; max-width: 28px; }
+
+  .calendar tbody td {
+    padding: 2px 1px;
+    text-align: center;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .calendar tbody td.name-cell {
+    text-align: left; padding: 5px 10px;
+    white-space: nowrap;
+    border-right: 0.5px solid var(--border);
+    position: sticky; left: 0;
+    background: var(--surface-2); z-index: 1;
+  }
+
+  .name-en { font-weight: 500; font-size: 12px; color: var(--text-primary); }
+  .name-zh { font-size: 10px; color: var(--text-muted); }
+
+  .group-header td {
+    font-size: 10px; font-weight: 500;
+    padding: 6px 10px 4px;
+    background: var(--surface-1);
+    border-top: 0.5px solid var(--border);
+    position: sticky; left: 0;
+  }
+
+  .day-cell {
+    height: 28px; width: 100%;
+    border-radius: 3px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+
+  .day-cell.leave { border-radius: 0; }
+  .day-cell.leave-start { border-radius: 4px 0 0 4px; }
+  .day-cell.leave-end { border-radius: 0 4px 4px 0; }
+  .day-cell.leave-single { border-radius: 4px; }
+  .day-cell.weekend { opacity: 0.4; }
+  .col-today { background: var(--bg-accent); }
+
+  .count-cell {
+    font-size: 11px; font-weight: 500;
+    min-width: 36px; text-align: center;
+    padding: 0 4px;
+  }
+
+  .legend {
+    display: flex; gap: 14px; align-items: center;
+    margin-top: 12px; font-size: 11px;
+    color: var(--text-secondary); flex-wrap: wrap;
+  }
+
+  .swatch { width: 28px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200;
+  }
+
+  .modal {
+    background: var(--surface-2);
+    border: 0.5px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 1.5rem;
+    width: 340px; max-width: 92vw;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  }
+
+  .modal h3 {
+    font-size: 15px; font-weight: 500;
+    margin-bottom: 1.1rem;
+    color: var(--text-primary);
+  }
+
+  .field { margin-bottom: 12px; }
+
+  .field label {
+    display: block; font-size: 11px;
+    color: var(--text-secondary); margin-bottom: 4px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    padding: 7px 10px;
+    font-size: 13px;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface-1);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    outline: none;
+    transition: border-color 0.1s;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--fill-accent);
+    box-shadow: 0 0 0 3px var(--bg-accent);
+  }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .modal-actions {
+    display: flex; gap: 8px;
+    justify-content: flex-end; margin-top: 1rem;
+  }
+
+  .type-toggle {
+    display: flex;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .type-btn {
+    flex: 1; padding: 7px;
+    font-size: 12px; text-align: center;
+    cursor: pointer;
+    background: var(--surface-1);
+    color: var(--text-secondary);
+    border: none;
+    transition: background 0.1s;
+    font-family: var(--font-sans);
+  }
+  .type-btn:first-child { border-right: 0.5px solid var(--border-strong); }
+  .type-btn.selected { background: var(--fill-accent); color: #fff; }
+
+  /* Records list */
+  .records-list {
+    max-height: 220px; overflow-y: auto;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    margin-top: 4px;
+    background: var(--surface-1);
+  }
+
+  .record-row {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    font-size: 11px;
+    border-bottom: 0.5px solid var(--border);
+    gap: 8px;
+  }
+  .record-row:last-child { border-bottom: none; }
+
+  .record-type {
+    font-size: 10px; padding: 1px 7px;
+    border-radius: 99px; white-space: nowrap;
+  }
+
+  .record-del {
+    font-size: 13px; color: var(--text-danger);
+    cursor: pointer; padding: 3px 6px;
+    border-radius: 4px;
+    border: none; background: transparent;
+    line-height: 1;
+  }
+  .record-del:hover { background: var(--bg-danger); }
+
+  .empty-msg {
+    padding: 16px; font-size: 12px;
+    color: var(--text-muted); text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>PKG 部門假期與出差總覽</h1>
+      <div class="subtitle">包裝設計部 · Merry Electronics</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="month-nav">
+      <button onclick="prevMonth()" aria-label="上個月"><i class="ti ti-chevron-left"></i></button>
+      <div class="month-label" id="monthLabel"></div>
+      <button onclick="nextMonth()" aria-label="下個月"><i class="ti ti-chevron-right"></i></button>
+    </div>
+    <div style="flex:1"></div>
+    <button class="btn" onclick="openManage()"><i class="ti ti-list-check"></i> 管理紀錄</button>
+    <button class="btn primary" onclick="openAddLeave()"><i class="ti ti-calendar-plus"></i> 登記</button>
+  </div>
+
+  <div class="filter-panel" id="filterPanel"></div>
+
+  <div class="calendar-wrap">
+    <table class="calendar" id="cal"></table>
+  </div>
+
+  <div class="legend" id="legend"></div>
+</div>
+
+<div id="modal" style="display:none"></div>
+
+<script>
+const STORAGE_KEY = 'pkg_leave_v7';
+
+const GROUPS = [
+  { label: '包裝設計部', key: 'g0', dark: '#378ADD', light: '#B5D4F4',
+    textLight: '#0C447C',
+    members: [
+      { en: 'Debby Kuo', zh: '郭惠欣' },
+      { en: 'Una Li', zh: '李宜宣' },
+      { en: 'Winkee Ong', zh: '翁綵珮' }
+    ]
+  },
+  { label: '包裝設計一課', key: 'g1', dark: '#1D9E75', light: '#9FE1CB',
+    textLight: '#085041',
+    members: [
+      { en: 'Queenie Hsu', zh: '許惠雅' },
+      { en: 'Michelle Liu', zh: '劉雅婷' },
+      { en: 'Elsa Lai', zh: '賴室臣' },
+      { en: 'Celia Hung', zh: '洪琇琪' }
+    ]
+  },
+  { label: '包裝設計二課', key: 'g2', dark: '#D85A30', light: '#F0997B',
+    textLight: '#712B13',
+    members: [
+      { en: 'Tim Chen', zh: '陳宋穎' },
+      { en: 'Jojo Chen', zh: '陳慧汶' },
+      { en: 'Jason Li', zh: '李昶毅' },
+      { en: 'Eddy Guo', zh: '郭宗林' },
+      { en: 'Kate Cho', zh: '卓亮如' },
+      { en: 'Hazel Liu', zh: '劉宜涵' }
+    ]
+  },
+  { label: '包裝設計三課', key: 'g3', dark: '#534AB7', light: '#AFA9EC',
+    textLight: '#26215C',
+    members: [
+      { en: 'Sanra Su', zh: '蘇芷靜' },
+      { en: 'Avery Hu', zh: '胡軒真' },
+      { en: 'Huxley Liu', zh: '劉浩' },
+      { en: 'John Yen', zh: '顏學淵' },
+      { en: 'Sunny Chang', zh: '張劉舒涵' },
+      { en: 'Ainley Lin', zh: '林筱涵' },
+      { en: 'Stacy Fang', zh: '方雅麗' }
+    ]
+  }
+];
+
+const GROUP_MAP = {};
+GROUPS.forEach(g => g.members.forEach(m => { GROUP_MAP[m.en] = g; }));
+
+let entries = [];
+let hiddenMembers = new Set();
+let viewYear, viewMonth;
+const today = new Date();
+
+function loadState() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    if (s) { entries = JSON.parse(s).entries || []; }
+  } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ entries })); } catch(e) {}
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+function toKey(y, m, d) { return `${y}-${pad(m)}-${pad(d)}`; }
+function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
+function isWeekend(y, m, d) { const w = new Date(y, m-1, d).getDay(); return w === 0 || w === 6; }
+
+function getEntryMap(en) {
+  const map = {};
+  for (const lv of entries) {
+    if (lv.member !== en) continue;
+    const from = new Date(lv.from + 'T00:00:00');
+    const to   = new Date(lv.to   + 'T00:00:00');
+    let cur = new Date(from);
+    while (cur <= to) {
+      map[toKey(cur.getFullYear(), cur.getMonth()+1, cur.getDate())] = lv.type;
+      cur.setDate(cur.getDate() + 1);
+    }
+  }
+  return map;
+}
+
+function renderFilterPanel() {
+  document.getElementById('filterPanel').innerHTML = GROUPS.map(g => {
+    const chips = g.members.map(m => {
+      const active = !hiddenMembers.has(m.en);
+      return `<span class="chip ${g.key} ${active ? 'active' : ''}"
+        onclick="toggleMember('${m.en}')"
+        title="${m.en} ${m.zh}">${m.en.split(' ')[0]}</span>`;
+    }).join('');
+    return `<div>
+      <div class="group-label">
+        <span style="color:${g.dark};font-weight:500">${g.label}</span>
+        <button onclick="toggleGroup('${g.key}')">切換</button>
+      </div>
+      <div class="member-chips">${chips}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleMember(en) {
+  if (hiddenMembers.has(en)) hiddenMembers.delete(en);
+  else hiddenMembers.add(en);
+  renderAll();
+}
+
+function toggleGroup(gKey) {
+  const g = GROUPS.find(x => x.key === gKey);
+  const allHidden = g.members.every(m => hiddenMembers.has(m.en));
+  g.members.forEach(m => {
+    if (allHidden) hiddenMembers.delete(m.en);
+    else hiddenMembers.add(m.en);
+  });
+  renderAll();
+}
+
+function renderCalendar() {
+  const y = viewYear, mo = viewMonth;
+  const total = daysInMonth(y, mo);
+  const todayCol = (today.getFullYear() === y && today.getMonth()+1 === mo) ? today.getDate() : -1;
+
+  let head = '<thead><tr><th class="name-col">成員</th>';
+  for (let d = 1; d <= total; d++) {
+    const isWk = isWeekend(y, mo, d);
+    const isT  = d === todayCol;
+    head += `<th class="day-col${isT ? ' col-today' : ''}">
+      <span style="font-size:10px;${isWk ? 'opacity:0.4' : ''}${isT ? ';color:var(--text-accent);font-weight:600' : ''}">${d}</span>
+    </th>`;
+  }
+  head += '<th style="min-width:38px;font-size:10px;color:var(--text-muted);text-align:center">假/差</th></tr></thead>';
+
+  let body = '<tbody>';
+  let totalLeave = 0, totalTrip = 0;
+
+  for (const g of GROUPS) {
+    const visibles = g.members.filter(m => !hiddenMembers.has(m.en));
+    if (!visibles.length) continue;
+
+    body += `<tr class="group-header">
+      <td colspan="${total+2}" style="border-left:3px solid ${g.dark};color:${g.dark}">${g.label}</td>
+    </tr>`;
+
+    for (const member of visibles) {
+      const eMap = getEntryMap(member.en);
+      let cntL = 0, cntT = 0;
+      for (let d = 1; d <= total; d++) {
+        const k = toKey(y, mo, d);
+        if (eMap[k] === 'leave') cntL++;
+        if (eMap[k] === 'trip')  cntT++;
+      }
+      totalLeave += cntL;
+      totalTrip  += cntT;
+
+      body += `<tr><td class="name-cell">
+        <div class="name-en">${member.en}</div>
+        <div class="name-zh">${member.zh}</div>
+      </td>`;
+
+      for (let d = 1; d <= total; d++) {
+        const key      = toKey(y, mo, d);
+        const type     = eMap[key];
+        const prevType = d > 1     ? eMap[toKey(y, mo, d-1)] : null;
+        const nextType = d < total ? eMap[toKey(y, mo, d+1)] : null;
+        const isWk = isWeekend(y, mo, d);
+        const isT  = d === todayCol;
+
+        let cls = 'day-cell';
+        let bg = '', color = '';
+        if (type) {
+          cls += ' leave';
+          const ps = prevType === type, ns = nextType === type;
+          if (!ps && !ns) cls += ' leave-single';
+          else if (!ps)   cls += ' leave-start';
+          else if (!ns)   cls += ' leave-end';
+          bg    = type === 'leave' ? g.dark : g.light;
+          color = type === 'leave' ? '#fff' : g.textLight;
+        }
+        if (isWk) cls += ' weekend';
+
+        const icon = type === 'trip'
+          ? '<i class="ti ti-plane" style="font-size:9px"></i>'
+          : '';
+
+        body += `<td class="${isT && !type ? 'col-today' : ''}">
+          <div class="${cls}" style="${bg ? `background:${bg};color:${color}` : ''}">${icon}</div>
+        </td>`;
+      }
+
+      const countStr = [
+        cntL ? `<span style="color:${g.dark}">${cntL}</span>` : '',
+        cntT ? `<span style="color:${g.dark};opacity:0.55">${cntT}</span>` : ''
+      ].filter(Boolean).join('/');
+
+      body += `<td class="count-cell">${countStr}</td></tr>`;
+    }
+  }
+
+  body += '</tbody>';
+  document.getElementById('cal').innerHTML = head + body;
+
+  document.getElementById('legend').innerHTML =
+    `<div style="display:flex;align-items:center;gap:5px"><span class="swatch" style="background:#378ADD"></span> 休假</div>` +
+    `<div style="display:flex;align-items:center;gap:5px"><span class="swatch" style="background:#B5D4F4"></span><i class="ti ti-plane" style="font-size:11px"></i> 出差</div>` +
+    `<div style="flex:1"></div>` +
+    ((totalLeave || totalTrip)
+      ? `<span style="color:var(--text-muted)">本月 休假 ${totalLeave} 天 · 出差 ${totalTrip} 天</span>`
+      : '');
+}
+
+function renderAll() {
+  document.getElementById('monthLabel').textContent = `${viewYear} / ${pad(viewMonth)}`;
+  renderFilterPanel();
+  renderCalendar();
+}
+
+function prevMonth() {
+  viewMonth--;
+  if (viewMonth < 1) { viewMonth = 12; viewYear--; }
+  renderAll();
+}
+function nextMonth() {
+  viewMonth++;
+  if (viewMonth > 12) { viewMonth = 1; viewYear++; }
+  renderAll();
+}
+
+/* ── Modal helpers ── */
+let modalType = 'leave';
+
+function memberOptions() {
+  return GROUPS.map(g =>
+    `<optgroup label="${g.label}">
+      ${g.members.map(m => `<option value="${m.en}">${m.en}（${m.zh}）</option>`).join('')}
+    </optgroup>`
+  ).join('');
+}
+
+function openAddLeave() {
+  modalType = 'leave';
+  const y = viewYear, mo = viewMonth;
+  const first = `${y}-${pad(mo)}-01`;
+  showModal(`
+    <h3>登記假期／出差</h3>
+    <div class="field">
+      <label>類型</label>
+      <div class="type-toggle">
+        <div class="type-btn selected" id="mt-leave" onclick="setModalType('leave')">休假</div>
+        <div class="type-btn" id="mt-trip" onclick="setModalType('trip')">出差 <i class="ti ti-plane"></i></div>
+      </div>
+    </div>
+    <div class="field"><label>成員</label><select id="lvM">${memberOptions()}</select></div>
+    <div class="field-row">
+      <div class="field"><label>開始日</label><input id="lvF" type="date" value="${first}"></div>
+      <div class="field"><label>結束日</label><input id="lvT" type="date" value="${first}"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">取消</button>
+      <button class="btn primary" onclick="addEntry()">確認登記</button>
+    </div>
+  `);
+}
+
+function setModalType(t) {
+  modalType = t;
+  document.getElementById('mt-leave').className = 'type-btn' + (t === 'leave' ? ' selected' : '');
+  document.getElementById('mt-trip').className  = 'type-btn' + (t === 'trip'  ? ' selected' : '');
+}
+
+function addEntry() {
+  const member = document.getElementById('lvM').value;
+  const from   = document.getElementById('lvF').value;
+  const to     = document.getElementById('lvT').value;
+  if (!from || !to || from > to) { alert('日期範圍有誤，請重新確認'); return; }
+  entries.push({ member, from, to, type: modalType });
+  saveState();
+  closeModal();
+  renderCalendar();
+}
+
+/* ── Manage records ── */
+function openManage() {
+  showModal(`
+    <h3>管理紀錄</h3>
+    <div class="field">
+      <label>篩選成員</label>
+      <select id="mgFilter" onchange="refreshManageList()">${'<option value="">全部成員</option>' + memberOptions()}</select>
+    </div>
+    <div class="records-list" id="mgList"></div>
+    <div class="modal-actions" style="margin-top:10px">
+      <button class="btn" onclick="closeModal()">關閉</button>
+    </div>
+  `);
+  refreshManageList();
+}
+
+function refreshManageList() {
+  const filter = document.getElementById('mgFilter').value;
+  const relevant = entries
+    .map((e, i) => ({ ...e, _idx: i }))
+    .filter(e => !filter || e.member === filter)
+    .sort((a, b) => a.from.localeCompare(b.from));
+
+  if (!relevant.length) {
+    document.getElementById('mgList').innerHTML = '<div class="empty-msg">目前沒有紀錄</div>';
+    return;
+  }
+
+  document.getElementById('mgList').innerHTML = relevant.map(e => {
+    const g = GROUP_MAP[e.member];
+    const bg    = e.type === 'leave' ? (g ? g.dark  : '#378ADD') : (g ? g.light  : '#B5D4F4');
+    const color = e.type === 'leave' ? '#fff'                    : (g ? g.textLight : '#333');
+    const label = e.type === 'leave' ? '休假' : '出差';
+    const dateStr = e.from === e.to ? e.from : `${e.from} ～ ${e.to}`;
+    return `<div class="record-row">
+      <div style="display:flex;align-items:center;gap:7px;flex:1;min-width:0">
+        <span class="record-type" style="background:${bg};color:${color}">${label}</span>
+        <span style="font-weight:500">${e.member.split(' ')[0]}</span>
+        <span style="color:var(--text-muted);font-size:11px">${dateStr}</span>
+      </div>
+      <button class="record-del" onclick="deleteEntry(${e._idx})" aria-label="刪除">
+        <i class="ti ti-trash"></i>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function deleteEntry(idx) {
+  entries.splice(idx, 1);
+  saveState();
+  renderCalendar();
+  refreshManageList();
+}
+
+/* ── Modal shell ── */
+function showModal(inner) {
+  const m = document.getElementById('modal');
+  m.className = 'modal-bg';
+  m.style.display = 'flex';
+  m.innerHTML = `<div class="modal">${inner}</div>`;
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+/* ── Init ── */
+loadState();
+viewYear  = today.getFullYear();
+viewMonth = today.getMonth() + 1;
+renderAll();
+</script>
+</body>
+</html>
