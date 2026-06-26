@@ -412,7 +412,7 @@ window.refreshManageList = function() {
         <span style="font-weight:500">${e.member.split(' ')[0]}</span>
         <span style="color:var(--text-muted)">${dateStr}</span>
       </div>
-      <button class="record-del" onclick="deleteEntry('${e.fbKey}')" aria-label="刪除"><i class="ti ti-trash"></i></button>
+      <button class="record-del" onclick="deleteEntry('${e.fbKey}')">✕ 刪除</button>
     </div>`;
   }).join('');
 };
