@@ -148,13 +148,13 @@ const entriesRef = ref(db, 'entries');
 // ── Groups ──
 const GROUPS = [
   { label: '包裝設計部',   key: 'g0', dark: '#378ADD', light: '#B5D4F4', textLight: '#0C447C',
-    members: [{ en: 'Debby Kuo', zh: '郭惠欣' }, { en: 'Una Li', zh: '李宜宣' }, { en: 'Winkee Ong', zh: '翁綵珮' }] },
+    members: [{ en: 'Debby Kuo', zh: '郭惠欣' }, { en: 'Una Li', zh: '李宜宣' }, { en: 'Winkee Ong', zh: '翁綵琁' }] },
   { label: '包裝設計一課', key: 'g1', dark: '#1D9E75', light: '#9FE1CB', textLight: '#085041',
     members: [{ en: 'Queenie Hsu', zh: '許惠雅' }, { en: 'Michelle Liu', zh: '劉雅婷' }, { en: 'Elsa Lai', zh: '賴室臣' }, { en: 'Celia Hung', zh: '洪琇琪' }] },
   { label: '包裝設計二課', key: 'g2', dark: '#D85A30', light: '#F0997B', textLight: '#712B13',
-    members: [{ en: 'Tim Chen', zh: '陳宋穎' }, { en: 'Jojo Chen', zh: '陳慧汶' }, { en: 'Jason Li', zh: '李昶毅' }, { en: 'Eddy Guo', zh: '郭宗林' }, { en: 'Kate Cho', zh: '卓亮如' }, { en: 'Hazel Liu', zh: '劉宜涵' }] },
+    members: [{ en: 'Tim Chen', zh: '陳宗穎' }, { en: 'Jojo Chen', zh: '陳慧汶' }, { en: 'Jason Li', zh: '李昶毅' }, { en: 'Eddy Guo', zh: '郭宗林' }, { en: 'Kate Cho', zh: '卓育如' }, { en: 'Hazel Liu', zh: '劉宜涵' }] },
   { label: '包裝設計三課', key: 'g3', dark: '#534AB7', light: '#AFA9EC', textLight: '#26215C',
-    members: [{ en: 'Sanra Su', zh: '蘇芷靜' }, { en: 'Avery Hu', zh: '胡軒真' }, { en: 'Huxley Liu', zh: '劉浩' }, { en: 'John Yen', zh: '顏學淵' }, { en: 'Sunny Chang', zh: '張劉舒涵' }, { en: 'Ainley Lin', zh: '林筱涵' }, { en: 'Stacy Fang', zh: '方雅麗' }] }
+    members: [{ en: 'Sanra Su', zh: '蘇芷靜' }, { en: 'Avery Hu', zh: '胡輔真' }, { en: 'Huxley Liu', zh: '劉浩' }, { en: 'John Yen', zh: '顏學淵' }, { en: 'Sunny Chang', zh: '張劉舒涵' }, { en: 'Ainley Lin', zh: '林筱涵' }, { en: 'Stacy Fang', zh: '方雅麗' }] }
 ];
 const GROUP_MAP = {};
 GROUPS.forEach(g => g.members.forEach(m => { GROUP_MAP[m.en] = g; }));
